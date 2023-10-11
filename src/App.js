@@ -78,11 +78,11 @@ function App() {
                 <input type="number" name="weight" value={userData.weight} onChange={handleChange} style={{width: '100%'}} />
               </label>
               <label>
-                Окружность бедра:
+                Окружность бедра, см:
                 <input type="number" name="hipCircumference" value={userData.hipCircumference} onChange={handleChange} style={{width: '100%'}} />
               </label>
               <label>
-                Окружность запястья:
+                Окружность запястья, см:
                 <input type="number" name="wristCircumference" value={userData.wristCircumference} onChange={handleChange} style={{width: '100%'}} />
               </label>
             </>
