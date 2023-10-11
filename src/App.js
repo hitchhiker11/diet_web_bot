@@ -31,7 +31,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Diet App</h1>
+      <h1>Ассистент-диетоло</h1>
       <form onSubmit={handleSubmit}>
         <label>
           ФИО:
