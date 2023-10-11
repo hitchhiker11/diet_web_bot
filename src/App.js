@@ -30,9 +30,9 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Diet App</h1>
-      <form onSubmit={handleSubmit} style={{textAlign: 'left', marginLeft: '40px'}}>
-        <div style={{maxWidth: '300px'}}>
+      <h1>Ассистент-диетолог</h1>
+      <form onSubmit={handleSubmit} style={{ textAlign: 'left', maxWidth: '400px', margin: '0 auto' }}>
+        <div style={{ padding: '0 40px', boxSizing: 'border-box' }}>
           <label>
             ФИО:
             <input type="text" name="name" value={userData.name} onChange={handleChange} style={{width: '100%'}} />
