@@ -12,6 +12,7 @@ function App() {
     height: "",
     weight: ""
   });
+  const [calculatedMetabolism, setCalculatedMetabolism] = useState(null);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -29,16 +30,19 @@ function App() {
   const handleSubmit = e => {
     e.preventDefault();
     if (showAdditionalFields && userData.gender === 'female') {
-      userData.metabolism = calculateMetabolism();
+      const metabolismValue = calculateMetabolism();
+      setUserData({ ...userData, metabolism: metabolismValue });
+      setCalculatedMetabolism(metabolismValue);
+    } else {
+      setCalculatedMetabolism(userData.metabolism);
     }
-    console.log(userData);
   };
 
   return (
     <div className="App">
       <h2>Ассистент-диетолог</h2>
       <form onSubmit={handleSubmit}>
-        <label>
+      <label>
           ФИО:
           <input type="text" name="name" value={userData.name} onChange={handleChange} />
         </label>
@@ -90,8 +94,12 @@ function App() {
             </label>
           </>
         )}
+
         <button type="submit">Подтвердить</button>
       </form>
+      {calculatedMetabolism && (
+        <p>Вычисленный метаболизм: {calculatedMetabolism}</p>
+      )}
     </div>
   );
 }
