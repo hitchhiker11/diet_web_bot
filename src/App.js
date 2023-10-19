@@ -23,71 +23,58 @@ function App() {
     });
   };
 
+  const calculateMetabolism = () => {
+    if (userData.gender === 'female') {
+      let B = 10 * userData.weight + 6.25 * userData.height - 5 * userData.age - 300;
+      return B >= 1200 ? B : 1200;
+    }
+    // Добавьте расчет для мужчин, если это необходимо
+  };
+
   const handleSubmit = e => {
     e.preventDefault();
+    if (showAdditionalFields) {
+      userData.metabolism = calculateMetabolism();
+    }
     console.log(userData);
+  };
+
+  const handleDontKnowClick = () => {
+    setShowAdditionalFields(!showAdditionalFields);
   };
 
   return (
     <div className="App">
-      <h1>Ассистент-диетолог</h1>
-      <form onSubmit={handleSubmit} style={{ textAlign: 'left', maxWidth: '400px', margin: '0 auto' }}>
-        <div style={{ padding: '0 40px', boxSizing: 'border-box' }}>
-          <label>
-            ФИО:
-            <input type="text" name="name" value={userData.name} onChange={handleChange} style={{width: '100%'}} />
-          </label>
-          <label>
-            Возраст:
-            <input type="number" name="age" value={userData.age} onChange={handleChange} style={{width: '100%'}} />
-          </label>
-          <label>
-            Пол:
-            <select name="gender" value={userData.gender} onChange={handleChange} style={{width: '100%'}}>
-              <option value="">Выбрать...</option>
-              <option value="male">Мужчина</option>
-              <option value="female">Женщина</option>
-            </select>
-          </label>
-          <label>
-            Уровень активности:
-            <select name="activity" value={userData.activity} onChange={handleChange} style={{width: '100%'}}>
-              <option value="">Выбрать...</option>
-              <option value="low">Низкий</option>
-              <option value="medium">Средний</option>
-              <option value="high">Высокий</option>
-            </select>
-          </label>
-          {!showAdditionalFields && (
+      <h2>Ассистент-диетолог</h2>
+      <form onSubmit={handleSubmit}>
+        {/* Остальные поля */}
+        <label>
+          Метаболизм:
+          <input 
+            type="number" 
+            name="metabolism" 
+            value={userData.metabolism} 
+            onChange={handleChange} 
+            disabled={showAdditionalFields}
+          />
+        </label>
+        <button type="button" onClick={handleDontKnowClick}>
+          {!showAdditionalFields ? 'Не знаю свой метаболизм' : 'Я знаю свой метаболизм'}
+        </button>
+        {showAdditionalFields && (
+          <>
+            {/* Поля для ввода роста, веса и других параметров */}
             <label>
-              Метаболизм:
-              <input type="number" name="metabolism" value={userData.metabolism} onChange={handleChange} style={{width: '100%'}} />
+              Рост, см:
+              <input type="number" name="height" value={userData.height} onChange={handleChange} />
             </label>
-          )}
-          <button type="button" onClick={() => setShowAdditionalFields(!showAdditionalFields)}>
-            Не знаю свой метаболизм
-          </button>
-          {showAdditionalFields && (
-            <>
-              <label>
-                Рост:
-                <input type="number" name="height" value={userData.height} onChange={handleChange} style={{width: '100%'}} />
-              </label>
-              <label>
-                Вес:
-                <input type="number" name="weight" value={userData.weight} onChange={handleChange} style={{width: '100%'}} />
-              </label>
-              <label>
-                Окружность бедра, см:
-                <input type="number" name="hipCircumference" value={userData.hipCircumference} onChange={handleChange} style={{width: '100%'}} />
-              </label>
-              <label>
-                Окружность запястья, см:
-                <input type="number" name="wristCircumference" value={userData.wristCircumference} onChange={handleChange} style={{width: '100%'}} />
-              </label>
-            </>
-          )}
-        </div>
+            <label>
+              Вес, кг:
+              <input type="number" name="weight" value={userData.weight} onChange={handleChange} />
+            </label>
+            {/* Добавьте другие поля, если это необходимо */}
+          </>
+        )}
         <button type="submit">Подтвердить</button>
       </form>
     </div>
