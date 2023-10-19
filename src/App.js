@@ -10,9 +10,7 @@ function App() {
     activity: "",
     metabolism: "",
     height: "",
-    weight: "",
-    hipCircumference: "",
-    wristCircumference: "",
+    weight: ""
   });
 
   const handleChange = e => {
@@ -24,30 +22,47 @@ function App() {
   };
 
   const calculateMetabolism = () => {
-    if (userData.gender === 'female') {
-      let B = 10 * userData.weight + 6.25 * userData.height - 5 * userData.age - 300;
-      return B >= 1200 ? B : 1200;
-    }
-    // Добавьте расчет для мужчин, если это необходимо
+    let B = 10 * parseFloat(userData.weight) + 6.25 * parseFloat(userData.height) - 5 * parseFloat(userData.age) - 300;
+    return B >= 1200 ? B : 1200;
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (showAdditionalFields) {
+    if (showAdditionalFields && userData.gender === 'female') {
       userData.metabolism = calculateMetabolism();
     }
     console.log(userData);
-  };
-
-  const handleDontKnowClick = () => {
-    setShowAdditionalFields(!showAdditionalFields);
   };
 
   return (
     <div className="App">
       <h2>Ассистент-диетолог</h2>
       <form onSubmit={handleSubmit}>
-        {/* Остальные поля */}
+        <label>
+          ФИО:
+          <input type="text" name="name" value={userData.name} onChange={handleChange} />
+        </label>
+        <label>
+          Возраст:
+          <input type="number" name="age" value={userData.age} onChange={handleChange} />
+        </label>
+        <label>
+          Пол:
+          <select name="gender" value={userData.gender} onChange={handleChange}>
+            <option value="">Выбрать...</option>
+            <option value="male">Мужчина</option>
+            <option value="female">Женщина</option>
+          </select>
+        </label>
+        <label>
+          Уровень активности:
+          <select name="activity" value={userData.activity} onChange={handleChange}>
+            <option value="">Выбрать...</option>
+            <option value="low">Низкий</option>
+            <option value="medium">Средний</option>
+            <option value="high">Высокий</option>
+          </select>
+        </label>
         <label>
           Метаболизм:
           <input 
@@ -58,12 +73,13 @@ function App() {
             disabled={showAdditionalFields}
           />
         </label>
-        <button type="button" onClick={handleDontKnowClick}>
-          {!showAdditionalFields ? 'Не знаю свой метаболизм' : 'Я знаю свой метаболизм'}
-        </button>
+        {!userData.metabolism && 
+          <button type="button" onClick={() => setShowAdditionalFields(!showAdditionalFields)}>
+            Не знаю свой метаболизм
+          </button>
+        }
         {showAdditionalFields && (
           <>
-            {/* Поля для ввода роста, веса и других параметров */}
             <label>
               Рост, см:
               <input type="number" name="height" value={userData.height} onChange={handleChange} />
@@ -72,7 +88,6 @@ function App() {
               Вес, кг:
               <input type="number" name="weight" value={userData.weight} onChange={handleChange} />
             </label>
-            {/* Добавьте другие поля, если это необходимо */}
           </>
         )}
         <button type="submit">Подтвердить</button>
