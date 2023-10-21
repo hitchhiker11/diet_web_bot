@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MainScreen from './MainScreen';
 import MetabolismScreen from './MetabolismScreen';
-
+import './App.css';
 function App() {
   const [screen, setScreen] = useState('main');
 
