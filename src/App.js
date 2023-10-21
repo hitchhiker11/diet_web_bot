@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, Button, Picker } from 'react';
+import { StyleSheet, Text, TextInput, Button, Picker } from 'react';
 
 function calculateMetabolism(data) {
   let BM, PM1, PM2, IM;
@@ -76,14 +76,14 @@ export default function App() {
 
   if (screen === 'main') {
     return (
-      <View style={styles.container}>
+      <div style={styles.container}>
         <Text>Имя из телеграма</Text>
         <Button title="Мой метаболизм" onPress={() => setScreen('metabolism')} />
-      </View>
+      </div>
     );
   } else if (screen === 'metabolism') {
     return (
-      <View style={styles.container}>
+      <div style={styles.container}>
         <TextInput
           placeholder="ФИО"
           value={userData.name}
@@ -143,7 +143,7 @@ export default function App() {
         {finalMetabolism && (
           <Text>Итоговый метаболизм: {finalMetabolism}</Text>
         )}
-      </View>
+      </div>
     );
   }
 }
