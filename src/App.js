@@ -74,12 +74,11 @@ function App() {
   };
   
 
-  const calculateMetabolism = () => {
+  const calculateBasicMetabolism = () => {
     const M = 10 * parseFloat(userData.weight) + 6.25 * parseFloat(userData.height) - 5 * parseFloat(userData.age);
     if (userData.gender === 'female') M -= 161;
     return M >= 1200 ? M : 1200;
   };
-
   const calculatePM1 = () => {
     if (calculatedMetabolism < 1400) return 1400;
     return calculatedMetabolism;
@@ -97,14 +96,14 @@ function App() {
 
   const handleSubmit = e => {
     e.preventDefault();
-
+  
     // Достаем нужные данные из состояния
     const { gender, weight, height, age, activity, name, metabolism } = userData;
-
+  
     // Проверяем, если известен метаболизм, используем его, иначе используем 0
-    const knownBM = metabolism ? parseFloat(metabolism) : 0;
-
-    const finalMetabolism = calculateMetabolism({
+    const knownBM = metabolism ? parseFloat(metabolism) : calculateBasicMetabolism();
+  
+    const finalMetabolismValue = calculateMetabolism({
       BM: knownBM,
       gender: gender,
       weight: parseFloat(weight),
@@ -114,8 +113,7 @@ function App() {
       goal: "lose"
     });
     
-
-    setFinalMetabolism(finalMetabolism);
+    setFinalMetabolism(finalMetabolismValue);
   };
 
 
