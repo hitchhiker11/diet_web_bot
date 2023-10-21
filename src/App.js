@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, Button, Picker } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Button, Picker } from 'react';
 
 function calculateMetabolism(data) {
   let BM, PM1, PM2, IM;
