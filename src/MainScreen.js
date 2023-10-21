@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-//import './MainScreen.css';
+// import { Link } from 'react-router-dom';
+// import './MainScreen.css';
 
-function MainScreen() {
+function MainScreen({ onOpenMetabolism }) {
   return (
     <div className="MainScreen">
       <div className="profile-container">
@@ -21,8 +21,8 @@ function MainScreen() {
       </div>
 
       <div className="buttons-container">
-        <Link to="/my-parameters" className="button">Мои параметры</Link>
-        <Link to="/my-diet" className="button">Мой рацион</Link>
+        <button onClick={onOpenMetabolism} className="button">Мои параметры</button>
+        <button onClick={onOpenDiet} className="button">Мой рацион</button> 
       </div>
     </div>
   );
