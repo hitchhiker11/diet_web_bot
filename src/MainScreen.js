@@ -1,7 +1,7 @@
 import React from 'react';
 // import { Link } from 'react-router-dom';
 // import './MainScreen.css';
-
+import './App.css';
 function MainScreen({ onOpenMetabolism }) {
   return (
     <div className="MainScreen">
