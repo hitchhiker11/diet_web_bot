@@ -25,7 +25,6 @@ if (BM <= 1400) {
     PM1 = BM - 300;  // This subtracts 300 from BM if BM is above 1500
 }
   
-  
     // Расчетный метаболизм 2 PM2 в зависимости от уровня физической активности
     switch (data.activityLevel) {
       case "low":
