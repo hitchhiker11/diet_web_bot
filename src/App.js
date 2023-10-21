@@ -1,3 +1,5 @@
+
+
 import React, { useState } from 'react';
 import './App.css';
 
@@ -13,7 +15,7 @@ function App() {
     weight: ""
   });
   const [calculatedMetabolism, setCalculatedMetabolism] = useState(null);
-
+  const [finalMetabolism, setFinalMetabolism] = useState(null);
   const handleChange = e => {
     const { name, value } = e.target;
     setUserData({
@@ -23,19 +25,32 @@ function App() {
   };
 
   const calculateMetabolism = () => {
-    let B = 10 * parseFloat(userData.weight) + 6.25 * parseFloat(userData.height) - 5 * parseFloat(userData.age) - 300;
-    return B >= 1200 ? B : 1200;
+    const M = 10 * parseFloat(userData.weight) + 6.25 * parseFloat(userData.height) - 5 * parseFloat(userData.age);
+    if (userData.gender === 'female') M -= 161;
+    return M >= 1200 ? M : 1200;
+  };
+
+  const calculatePM1 = () => {
+    if (calculatedMetabolism < 1400) return 1400;
+    return calculatedMetabolism;
+  };
+
+  const calculatePM2 = () => {
+    const activityMultiplier = {
+      low: 0,
+      medium: 300,
+      high: 500
+    };
+    const pm1 = calculatePM1();
+    return pm1 + activityMultiplier[userData.activity];
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (showAdditionalFields && userData.gender === 'female') {
-      const metabolismValue = calculateMetabolism();
-      setUserData({ ...userData, metabolism: metabolismValue });
-      setCalculatedMetabolism(metabolismValue);
-    } else {
-      setCalculatedMetabolism(userData.metabolism);
-    }
+    const initialMetabolism = calculateMetabolism();
+    setCalculatedMetabolism(initialMetabolism);
+    const finalValue = calculatePM2();
+    setFinalMetabolism(finalValue);
   };
 
   return (
@@ -77,6 +92,7 @@ function App() {
             disabled={showAdditionalFields}
           />
         </label>
+
         {!userData.metabolism && 
           <button type="button" onClick={() => setShowAdditionalFields(!showAdditionalFields)}>
             Не знаю свой метаболизм
@@ -97,8 +113,8 @@ function App() {
 
         <button type="submit">Подтвердить</button>
       </form>
-      {calculatedMetabolism && (
-        <p>Вычисленный метаболизм: {calculatedMetabolism}</p>
+      {finalMetabolism && (
+        <p>Итоговый метаболизм: {finalMetabolism}</p>
       )}
     </div>
   );
