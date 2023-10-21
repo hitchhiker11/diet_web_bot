@@ -76,11 +76,11 @@ const handleChange = e => {
 };
 
 
-const calculateMetabolism = () => {
-  const M = 10 * parseFloat(userData.weight) + 6.25 * parseFloat(userData.height) - 5 * parseFloat(userData.age);
-  if (userData.gender === 'female') M -= 161;
-  return M >= 1200 ? M : 1200;
-};
+// const calculateMetabolism = () => {
+//   const M = 10 * parseFloat(userData.weight) + 6.25 * parseFloat(userData.height) - 5 * parseFloat(userData.age);
+//   if (userData.gender === 'female') M -= 161;
+//   return M >= 1200 ? M : 1200;
+// };
 
 const calculatePM1 = () => {
   if (calculatedMetabolism < 1400) return 1400;
