@@ -16,14 +16,15 @@ function MetabolismScreen() {
       }
     }
   
-    // Расчетный метаболизм 1 PM1
-    if (BM <= 1400) {
-      PM1 = 1400;
-    } else if (BM > 1400 && BM <= 1500) {
-      PM1 = BM - 300;
-    } else {
-      PM1 = 1200;
-    }
+// Расчетный метаболизм 1 PM1
+if (BM <= 1400) {
+    PM1 = 1400;
+} else if (BM > 1400 && BM <= 1500) {
+    PM1 = BM;
+} else {
+    PM1 = BM - 300;  // This subtracts 300 from BM if BM is above 1500
+}
+  
   
     // Расчетный метаболизм 2 PM2 в зависимости от уровня физической активности
     switch (data.activityLevel) {
