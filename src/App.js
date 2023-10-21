@@ -27,13 +27,13 @@ function calculateMetabolism(data) {
 
   // Расчетный метаболизм 2 PM2 в зависимости от уровня физической активности
   switch (data.activityLevel) {
-    case "H":
+    case "low":
       PM2 = PM1;
       break;
-    case "C":
+    case "medium":
       PM2 = PM1 + 300;
       break;
-    case "B":
+    case "high":
       PM2 = PM1 + 500;
       break;
     default:
@@ -72,6 +72,7 @@ function App() {
       [name]: value,
     });
   };
+  
 
   const calculateMetabolism = () => {
     const M = 10 * parseFloat(userData.weight) + 6.25 * parseFloat(userData.height) - 5 * parseFloat(userData.age);
@@ -110,8 +111,9 @@ function App() {
       height: parseFloat(height),
       age: parseFloat(age),
       activityLevel: activity,
-      goal: "lose"  // По умолчанию ставим "lose", так как у вас не было выбора для этой опции в форме
+      goal: "lose"
     });
+    
 
     setFinalMetabolism(finalMetabolism);
   };
