@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import './App.css';
 function MetabolismScreen() {
   // ... Весь ваш код функционала метаболизма ...
   function calculateMetabolism(data) {
