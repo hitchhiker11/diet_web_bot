@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import './App.css';
-
+import { StyleSheet, View, Text, TextInput, Button, Picker } from 'react-native';
 
 function calculateMetabolism(data) {
   let BM, PM1, PM2, IM;
 
-  // Расчет базового метаболизма BM
   if (data.BM) {
     BM = data.BM;
   } else {
@@ -16,16 +14,14 @@ function calculateMetabolism(data) {
     }
   }
 
-  // Расчетный метаболизм 1 PM1
   if (BM <= 1400) {
     PM1 = 1400;
-} else if (BM > 1400 && BM <= 1500) {
+  } else if (BM > 1400 && BM <= 1500) {
     PM1 = BM;
-} else {
-    PM1 = BM - 300;  // This subtracts 300 from BM if BM is above 1500
-}
+  } else {
+    PM1 = BM - 300;
+  }
 
-  // Расчетный метаболизм 2 PM2 в зависимости от уровня физической активности
   switch (data.activityLevel) {
     case "low":
       PM2 = PM1;
@@ -40,7 +36,6 @@ function calculateMetabolism(data) {
       PM2 = PM1;
   }
 
-  // Итоговый метаболизм IM в зависимости от цели
   if (data.goal === "lose") {
     IM = PM2;
   } else if (data.goal === "maintain") {
@@ -49,142 +44,122 @@ function calculateMetabolism(data) {
     IM = PM2;
   }
 
-  return IM;  // Возвращает итоговый метаболизм
+  return IM;
 }
 
-function App() {
-  const [showAdditionalFields, setShowAdditionalFields] = useState(false);
+export default function App() {
+  const [screen, setScreen] = useState('main');
+
   const [userData, setUserData] = useState({
     name: "",
     age: "",
-    gender: "",
+    gender: "M",
     activity: "",
     metabolism: "",
     height: "",
     weight: ""
   });
-  const [calculatedMetabolism, setCalculatedMetabolism] = useState(null);
   const [finalMetabolism, setFinalMetabolism] = useState(null);
-  const handleChange = e => {
-    const { name, value } = e.target;
-    setUserData({
-      ...userData,
-      [name]: value,
-    });
-  };
-  
 
-  // const calculateMetabolism = () => {
-  //   const M = 10 * parseFloat(userData.weight) + 6.25 * parseFloat(userData.height) - 5 * parseFloat(userData.age);
-  //   if (userData.gender === 'female') M -= 161;
-  //   return M >= 1200 ? M : 1200;
-  // };
-
-  const calculatePM1 = () => {
-    if (calculatedMetabolism < 1400) return 1400;
-    return calculatedMetabolism;
-  };
-
-  const calculatePM2 = () => {
-    const activityMultiplier = {
-      low: 0,
-      medium: 300,
-      high: 500
-    };
-    const pm1 = calculatePM1();
-    return pm1 + activityMultiplier[userData.activity];
-  };
-
-  const handleSubmit = e => {
-    e.preventDefault();
-
-    // Достаем нужные данные из состояния
-    const { gender, weight, height, age, activity, name, metabolism } = userData;
-
-    // Проверяем, если известен метаболизм, используем его, иначе используем 0
-    const knownBM = metabolism ? parseFloat(metabolism) : 0;
-
-    const finalMetabolism = calculateMetabolism({
-      BM: knownBM,
-      gender: gender,
-      weight: parseFloat(weight),
-      height: parseFloat(height),
-      age: parseFloat(age),
-      activityLevel: activity,
+  const handleSubmit = () => {
+    const finalMetabolismValue = calculateMetabolism({
+      BM: parseFloat(userData.metabolism) || 0,
+      gender: userData.gender,
+      weight: parseFloat(userData.weight),
+      height: parseFloat(userData.height),
+      age: parseFloat(userData.age),
+      activityLevel: userData.activity,
       goal: "lose"
     });
-    
-
-    setFinalMetabolism(finalMetabolism);
+    setFinalMetabolism(finalMetabolismValue);
   };
 
+  if (screen === 'main') {
+    return (
+      <View style={styles.container}>
+        <Text>Имя из телеграма</Text>
+        <Button title="Мой метаболизм" onPress={() => setScreen('metabolism')} />
+      </View>
+    );
+  } else if (screen === 'metabolism') {
+    return (
+      <View style={styles.container}>
+        <TextInput
+          placeholder="ФИО"
+          value={userData.name}
+          onChangeText={value => setUserData(prev => ({ ...prev, name: value }))}
+          style={styles.input}
+        />
 
-  return (
-    <div className="App">
-      <h2>Ассистент-диетолог</h2>
-      <form onSubmit={handleSubmit}>
-      <label>
-          ФИО:
-          <input type="text" name="name" value={userData.name} onChange={handleChange} />
-        </label>
-        <label>
-          Возраст:
-          <input type="number" name="age" value={userData.age} onChange={handleChange} />
-        </label>
-        <label>
-          Пол:
-          <select name="gender" value={userData.gender} onChange={handleChange}>
-            <option value="">Выбрать...</option>
-            <option value="male">Мужчина</option>
-            <option value="female">Женщина</option>
-          </select>
-        </label>
-        <label>
-          Уровень активности:
-          <select name="activity" value={userData.activity} onChange={handleChange}>
-            <option value="">Выбрать...</option>
-            <option value="low">Низкий</option>
-            <option value="medium">Средний</option>
-            <option value="high">Высокий</option>
-          </select>
-        </label>
-        <label>
-          Метаболизм:
-          <input 
-            type="number" 
-            name="metabolism" 
-            value={userData.metabolism} 
-            onChange={handleChange} 
-            disabled={showAdditionalFields}
-          />
-        </label>
+        <TextInput
+          placeholder="Возраст"
+          value={userData.age}
+          onChangeText={value => setUserData(prev => ({ ...prev, age: value }))}
+          style={styles.input}
+        />
 
-        {!userData.metabolism && 
-          <button type="button" onClick={() => setShowAdditionalFields(!showAdditionalFields)}>
-            Не знаю свой метаболизм
-          </button>
-        }
-        {showAdditionalFields && (
-          <>
-            <label>
-              Рост, см:
-              <input type="number" name="height" value={userData.height} onChange={handleChange} />
-            </label>
-            <label>
-              Вес, кг:
-              <input type="number" name="weight" value={userData.weight} onChange={handleChange} />
-            </label>
-          </>
+        <Picker
+          selectedValue={userData.gender}
+          onValueChange={value => setUserData(prev => ({ ...prev, gender: value }))}
+          style={styles.input}
+        >
+          <Picker.Item label="Мужчина" value="M" />
+          <Picker.Item label="Женщина" value="F" />
+        </Picker>
+
+        <Picker
+          selectedValue={userData.activity}
+          onValueChange={value => setUserData(prev => ({ ...prev, activity: value }))}
+          style={styles.input}
+        >
+          <Picker.Item label="Низкий" value="low" />
+          <Picker.Item label="Средний" value="medium" />
+          <Picker.Item label="Высокий" value="high" />
+        </Picker>
+
+        <TextInput
+          placeholder="Метаболизм"
+          value={userData.metabolism}
+          onChangeText={value => setUserData(prev => ({ ...prev, metabolism: value }))}
+          style={styles.input}
+        />
+
+        <TextInput
+          placeholder="Рост, см"
+          value={userData.height}
+          onChangeText={value => setUserData(prev => ({ ...prev, height: value }))}
+          style={styles.input}
+        />
+
+        <TextInput
+          placeholder="Вес, кг"
+          value={userData.weight}
+          onChangeText={value => setUserData(prev => ({ ...prev, weight: value }))}
+          style={styles.input}
+        />
+
+        <Button title="Подтвердить" onPress={handleSubmit} />
+
+        {finalMetabolism && (
+          <Text>Итоговый метаболизм: {finalMetabolism}</Text>
         )}
-
-        <button type="submit">Подтвердить</button>
-      </form>
-      {finalMetabolism && (
-        <p>Итоговый метаболизм: {finalMetabolism}</p>
-      )}
-    </div>
-  );
+      </View>
+    );
+  }
 }
 
-export default App;
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20
+  },
+  input: {
+    width: '100%',
+    padding: 10,
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: 'black'
+  }
+});
