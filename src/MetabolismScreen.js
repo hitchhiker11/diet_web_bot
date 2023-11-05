@@ -55,9 +55,26 @@ if (BM <= 1400) {
     // Your table data should be stored in an array or an object for easier management. 
     // For the purpose of this example, I will assume an array of objects named dietPlans.
     const dietPlans = [
-      // ... Your metabolism to diet plan mapping ...
       { metabolism: 1200, formula: 'М1Ф1О4К3Б7Ж5', formulaLactoseFree: 'М0Ф7О5К3Б7Ж5' },
-      // Add all the other rows from your table here...
+      { metabolism: 1300, formula: 'М1Ф2О4К3Б8Ж5', formulaLactoseFree: 'М0Ф2О5К3Б8Ж6' },
+      { metabolism: 1400, formula: 'М1Ф2О5К4Б8Ж5', formulaLactoseFree: 'М0Ф2О5К4Б9Ж6' },
+      { metabolism: 1500, formula: 'М2Ф2О5К4Б8Ж5', formulaLactoseFree: 'М0Ф2О6К4Б10Ж6' },
+      { metabolism: 1600, formula: 'М2Ф2О6К4Б9Ж5', formulaLactoseFree: 'М0Ф2О6К4Б11Ж7' },
+      { metabolism: 1700, formula: 'М2Ф2О6К5Б10Ж5', formulaLactoseFree: 'М0Ф2О6К5Б11Ж7' },
+      { metabolism: 1800, formula: 'М2Ф2О6К5Б11Ж5', formulaLactoseFree: 'М0Ф2О6К5Б12Ж8' },
+      { metabolism: 1900, formula: 'М2Ф2О6К5Б12Ж6', formulaLactoseFree: 'М0Ф2О6К6Б12Ж8' },
+      { metabolism: 2000, formula: 'М2Ф2О6К6Б12Ж6', formulaLactoseFree: 'М0Ф2О6К7Б13Ж8' },
+      { metabolism: 2100, formula: 'М2Ф2О6К6Б13Ж7', formulaLactoseFree: 'М0Ф2О6К7Б13Ж9' },
+      { metabolism: 2200, formula: 'М3Ф2О6К6Б13Ж7', formulaLactoseFree: 'М0Ф2О6К7Б14Ж10' },
+      { metabolism: 2300, formula: 'М3Ф2О7К6Б14Ж7', formulaLactoseFree: 'М0Ф2О7К7Б15Ж10' },
+      { metabolism: 2400, formula: 'М3Ф2О7К7Б14Ж7', formulaLactoseFree: 'М0Ф3О7К7Б15Ж11' },
+      { metabolism: 2500, formula: 'М3Ф2О7К7Б15Ж8', formulaLactoseFree: 'М0Ф4О7К7Б16Ж11' },
+      { metabolism: 2600, formula: 'М3Ф3О7К8Б15Ж8', formulaLactoseFree: 'М0Ф4О8К8Б16Ж11' },
+      { metabolism: 2700, formula: 'М4Ф3О7К8Б15Ж8', formulaLactoseFree: 'М0Ф5О8К8Б16Ж12' },
+      { metabolism: 2800, formula: 'М4Ф3О7К8Б15Ж9', formulaLactoseFree: 'М0Ф5О8К9Б16Ж12' },
+      { metabolism: 2900, formula: 'М4Ф3О7К8Б16Ж10', formulaLactoseFree: 'М0Ф5О8К9Б17Ж13' },
+      { metabolism: 3000, formula: 'М4Ф3О7К9Б16Ж10', formulaLactoseFree: 'М0Ф5О8К9Б17Ж14' },
+    
     ];
   
     // Find the closest match for the calculated metabolism in the dietPlans
