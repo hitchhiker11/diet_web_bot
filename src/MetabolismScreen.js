@@ -51,7 +51,23 @@ if (BM <= 1400) {
   
     return IM;  // Возвращает итоговый метаболизм
   }
-
+  const getDietPlan = (metabolism, isLactoseIntolerant) => {
+    // Your table data should be stored in an array or an object for easier management. 
+    // For the purpose of this example, I will assume an array of objects named dietPlans.
+    const dietPlans = [
+      // ... Your metabolism to diet plan mapping ...
+      { metabolism: 1200, formula: 'М1Ф1О4К3Б7Ж5', formulaLactoseFree: 'М0Ф7О5К3Б7Ж5' },
+      // Add all the other rows from your table here...
+    ];
+  
+    // Find the closest match for the calculated metabolism in the dietPlans
+    const matchingPlan = dietPlans.reduce((prev, curr) => {
+      return (Math.abs(curr.metabolism - metabolism) < Math.abs(prev.metabolism - metabolism) ? curr : prev);
+    });
+  
+    // Return either the lactose-free or regular formula based on user's lactose intolerance
+    return isLactoseIntolerant ? matchingPlan.formulaLactoseFree : matchingPlan.formula;
+  };
 
 // ///////////////////////////////
 
@@ -96,6 +112,8 @@ const calculatePM2 = () => {
   const pm1 = calculatePM1();
   return pm1 + activityMultiplier[userData.activity];
 };
+const [isLactoseIntolerant, setIsLactoseIntolerant] = useState(false);
+const [dietPlan, setDietPlan] = useState('');
 
 const handleSubmit = e => {
   e.preventDefault();
@@ -116,6 +134,8 @@ const handleSubmit = e => {
     goal: "lose"  // По умолчанию ставим "lose", так как у вас не было выбора для этой опции в форме
   });
 
+  const recommendedDietPlan = getDietPlan(finalMetabolism, isLactoseIntolerant);
+  setDietPlan(recommendedDietPlan);
   setFinalMetabolism(finalMetabolism);
 };
 
@@ -180,11 +200,21 @@ return (
             </label>
           </>
         )}
-
+        <label>
+          Непереносимость лактозы:
+          <input
+            type="checkbox"
+            checked={isLactoseIntolerant}
+            onChange={() => setIsLactoseIntolerant(!isLactoseIntolerant)}
+          />
+        </label>
         <button type="submit">Подтвердить</button>
       </form>
       {finalMetabolism && (
-        <p>Итоговый метаболизм: {finalMetabolism}</p>
+                <>
+                <p>Итоговый метаболизм: {finalMetabolism}</p>
+                <p>Рекомендуемый рацион: {dietPlan}</p>
+              </>
       )}
     </div>
   );
