@@ -22,7 +22,7 @@ function MainScreen({ onOpenMetabolism }) {
 
       <div className="buttons-container">
         <button onClick={onOpenMetabolism} className="button">Мои параметры</button>
-        <button onClick={onOpenDiet} className="button">Мой рацион</button>  
+        {/* <button onClick={onOpenDiet} className="button">Мой рацион</button>  */}
       </div>
     </div>
   );
