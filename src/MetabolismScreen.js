@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import FoodSelection from './FoodSelection'; // Путь к компоненту FoodSelection
+import FoodModal from './FoodModal';
+
 import './App.css';
 function MetabolismScreen() {
   // ... Весь ваш код функционала метаболизма ...
@@ -100,6 +103,62 @@ const [userData, setUserData] = useState({
 });
 const [calculatedMetabolism, setCalculatedMetabolism] = useState(null);
 const [finalMetabolism, setFinalMetabolism] = useState(null);
+const [selectedDietProducts, setSelectedDietProducts] = useState([]);
+const [isModalOpen, setIsModalOpen] = useState(false);
+const [selectedGroup, setSelectedGroup] = useState(null);
+const [selectedMacro, setSelectedMacro] = useState(null);
+const [foodSelectionVisible, setFoodSelectionVisible] = useState(false);
+const [isLactoseFree, setIsLactoseFree] = useState(false);
+const [isGlutenFree, setIsGlutenFree] = useState(false);
+const [isVegetarian, setIsVegetarian] = useState(false);
+const [isLactoVegetarian, setIsLactoVegetarian] = useState(false);
+const [isOvoLactoVegetarian, setIsOvoLactoVegetarian] = useState(false);
+const [isVegan, setIsVegan] = useState(false);
+const [dietGroups, setDietGroups] = useState([]);
+const [dietPlan, setDietPlan] = useState('');
+const [selectedProductsByGroup, setSelectedProductsByGroup] = useState({});
+const [selectedProducts, setSelectedProducts] = useState([]);
+
+
+// Собираем ограничения пользователя
+const userRestrictions = [
+  isLactoseFree ? 'lactose-free' : '',
+  isGlutenFree ? 'gluten-free' : '',
+  isVegetarian ? 'vegetarian' : '',
+  isLactoVegetarian ? 'lacto-vegetarian' : '',
+  isOvoLactoVegetarian ? 'ovo-lacto-vegetarian' : '',
+  isVegan ? 'vegan' : ''
+].filter(Boolean); // Фильтруем пустые значения
+
+const extractGroupsFromDietPlan = (plan) => {
+  return plan.match(/[А-Я]/g) || [];
+};
+
+useEffect(() => {
+  if (dietPlan) {
+    setDietGroups(extractGroupsFromDietPlan(dietPlan));
+  }
+}, [dietPlan]);
+
+
+// Функция для обработки клика по элементу формулы рациона
+const handleMacroSelect = (macro) => {
+  setSelectedGroup(macro);
+  setSelectedProducts(selectedProductsByGroup[macro] || []);
+  setIsModalOpen(true);
+};
+
+const handleCloseModal = () => {
+  setIsModalOpen(false);
+};
+
+const handleSelectionChange = (group, selectedProducts) => {
+  setSelectedProductsByGroup(prev => ({
+    ...prev,
+    [group]: selectedProducts
+  }));
+};
+
 const handleChange = e => {
   const { name, value } = e.target;
   setUserData({
@@ -107,7 +166,69 @@ const handleChange = e => {
     [name]: value,
   });
 };
+const handleSaveSelection = () => {
+  setSelectedProductsByGroup(prev => ({
+    ...prev,
+    [selectedGroup]: selectedProducts
+  }));
+  setIsModalOpen(false);
+};
+const handleFinishSelection = () => {
+  // Закрыть модальное окно
+  setIsModalOpen(false);
+  
+  // Здесь можно обработать итоговый рацион
+  // Например, вывод его на экран или отправка данных на сервер
+  console.log('Итоговый выбор продуктов:', selectedDietProducts);
+  // Выводите selectedDietProducts как угодно, например, в виде списка на странице
+};
 
+// const foodGroups = ['Б', 'Ж', 'У', 'Ф', 'М', 'О'];
+
+
+
+const findNextGroup = (currentGroup, groups) => {
+  if (!groups || groups.length === 0) return currentGroup;
+  const currentIndex = groups.indexOf(currentGroup);
+  return groups[(currentIndex + 1) % groups.length];
+};
+
+const findPreviousGroup = (currentGroup, groups) => {
+  if (!groups || groups.length === 0) return currentGroup;
+  const currentIndex = groups.indexOf(currentGroup);
+  return groups[(currentIndex - 1 + groups.length) % groups.length];
+};
+
+const handleNextGroup = () => {
+  const nextGroup = findNextGroup(selectedGroup, dietGroups);
+  if (nextGroup !== selectedGroup) {
+    setSelectedGroup(nextGroup);
+  }
+};
+
+const handlePreviousGroup = () => {
+  const prevGroup = findPreviousGroup(selectedGroup, dietGroups);
+  if (prevGroup !== selectedGroup) {
+    setSelectedGroup(prevGroup);
+  }
+};;
+
+
+
+const handleContinue = () => {
+  // Логика для продолжения выбора из текущей группы
+};
+
+const handleSwitchGroup = () => {
+  // Логика для перехода в другую группу
+  setIsModalOpen(false);
+};
+
+const handleFinish = () => {
+  // Логика для завершения формирования приема пищи
+  setIsModalOpen(false);
+  // Вы можете добавить логику для отображения итогового меню приема пищи здесь
+};
 
 // const calculateMetabolism = () => {
 //   const M = 10 * parseFloat(userData.weight) + 6.25 * parseFloat(userData.height) - 5 * parseFloat(userData.age);
@@ -130,7 +251,7 @@ const calculatePM2 = () => {
   return pm1 + activityMultiplier[userData.activity];
 };
 const [isLactoseIntolerant, setIsLactoseIntolerant] = useState(false);
-const [dietPlan, setDietPlan] = useState('');
+
 
 const handleSubmit = e => {
   e.preventDefault();
@@ -154,6 +275,7 @@ const handleSubmit = e => {
   const recommendedDietPlan = getDietPlan(finalMetabolism, isLactoseIntolerant);
   setDietPlan(recommendedDietPlan);
   setFinalMetabolism(finalMetabolism);
+
 };
 
 
@@ -161,9 +283,9 @@ const handleSubmit = e => {
 
 
 return (
-    <div className="App">
-      <h2>Ассистент-диетолог</h2>
-      <form onSubmit={handleSubmit}>
+  <div className="App">
+    <h2>Ассистент-диетолог</h2>
+    <form onSubmit={handleSubmit}>
       <label>
           ФИО:
           <input type="text" name="name" value={userData.name} onChange={handleChange} />
@@ -227,14 +349,41 @@ return (
         </label>
         <button type="submit">Подтвердить</button>
       </form>
+    {finalMetabolism && (
+      <>
+        <p>Итоговый метаболизм: {finalMetabolism}</p>
+        <div>
+          <p>Рекомендуемый рацион:</p>
+          {/* Преобразуем строку рациона в массив кликабельных элементов */}
+          {dietPlan.split('').map((macro, index) => (
+            <span key={index} onClick={() => handleMacroSelect(macro)} style={{cursor: 'pointer', margin: '0 5px'}}>
+              {macro}
+            </span>
+          ))}
+        </div>
+        {/* Показываем FoodSelection если выбран макроэлемент */}
+        {/* {foodSelectionVisible && selectedMacro && ( */}
+        <FoodModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        selectedGroup={selectedGroup}
+        userRestrictions={userRestrictions}
+        selectedProducts={selectedProductsByGroup[selectedGroup] || []}
+        onSave={() => handleSaveSelection(selectedGroup, selectedProducts)}      
+        onSelectionChange={(selectedProducts) => handleSelectionChange(selectedGroup, selectedProducts)}
+        onNextGroup={handleNextGroup}
+        onPreviousGroup={handlePreviousGroup}
+        nextGroup={findNextGroup(selectedGroup, dietGroups)}
+        previousGroup={findPreviousGroup(selectedGroup, dietGroups)}
+      />
+
       {finalMetabolism && (
-                <>
-                <p>Итоговый метаболизм: {finalMetabolism}</p>
-                <p>Рекомендуемый рацион: {dietPlan}</p>
-              </>
+        <button onClick={handleFinishSelection}>Завершить выбор рациона</button>
       )}
-    </div>
-  );
+      </>
+    )}
+  </div>
+);
 }
 
 export default MetabolismScreen;
