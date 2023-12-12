@@ -2,9 +2,11 @@ import React from 'react';
 import FoodSelection from './FoodSelection';
 import './App.css';
 
-const FoodModal = ({ isOpen, onClose, selectedGroup, userRestrictions, onSelectionChange, onNextGroup, onPreviousGroup, nextGroup, previousGroup, onSave }) => {
+const FoodModal = ({ currentSelection, selectedProducts, isOpen, onClose, selectedGroup, userRestrictions, onSelectionChange, onNextGroup, onPreviousGroup, nextGroup, previousGroup, onSave }) => {
     if (!isOpen) return null;
-  
+    const handleSave = () => {
+        onSave(currentSelection);
+      };
     return (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -18,7 +20,7 @@ const FoodModal = ({ isOpen, onClose, selectedGroup, userRestrictions, onSelecti
               onSelectionChange={onSelectionChange}
               
             />
-            <button onClick={onSave}>Сохранить</button>
+            <button onClick={handleSave}>Сохранить</button>
           </div>
         </div>
       );
