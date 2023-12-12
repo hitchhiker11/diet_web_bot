@@ -118,7 +118,13 @@ const [dietGroups, setDietGroups] = useState([]);
 const [dietPlan, setDietPlan] = useState('');
 const [selectedProductsByGroup, setSelectedProductsByGroup] = useState({});
 const [selectedProducts, setSelectedProducts] = useState([]);
-
+useEffect(() => {
+  if (selectedGroup && selectedProductsByGroup[selectedGroup]) {
+    setSelectedProducts(selectedProductsByGroup[selectedGroup]);
+  } else {
+    setSelectedProducts([]);
+  }
+}, [selectedGroup, selectedProductsByGroup]);
 
 // Собираем ограничения пользователя
 const userRestrictions = [
@@ -144,20 +150,19 @@ useEffect(() => {
 // Функция для обработки клика по элементу формулы рациона
 const handleMacroSelect = (macro) => {
   setSelectedGroup(macro);
-  setSelectedProducts(selectedProductsByGroup[macro] || []);
   setIsModalOpen(true);
 };
-
 const handleCloseModal = () => {
   setIsModalOpen(false);
 };
 
-const handleSelectionChange = (group, selectedProducts) => {
+const handleSelectionChange = (group, newSelectedProducts) => {
   setSelectedProductsByGroup(prev => ({
     ...prev,
-    [group]: selectedProducts
+    [group]: newSelectedProducts
   }));
 };
+
 
 const handleChange = e => {
   const { name, value } = e.target;
@@ -166,10 +171,10 @@ const handleChange = e => {
     [name]: value,
   });
 };
-const handleSaveSelection = () => {
+const handleProductSave = (selectedGroup, products) => {
   setSelectedProductsByGroup(prev => ({
     ...prev,
-    [selectedGroup]: selectedProducts
+    [selectedGroup]: products
   }));
   setIsModalOpen(false);
 };
@@ -369,8 +374,8 @@ return (
         selectedGroup={selectedGroup}
         userRestrictions={userRestrictions}
         selectedProducts={selectedProductsByGroup[selectedGroup] || []}
-        onSave={() => handleSaveSelection(selectedGroup, selectedProducts)}      
-        onSelectionChange={(selectedProducts) => handleSelectionChange(selectedGroup, selectedProducts)}
+        onSave={(products) => handleProductSave(selectedGroup, products)}
+        onSelectionChange={handleSelectionChange}
         onNextGroup={handleNextGroup}
         onPreviousGroup={handlePreviousGroup}
         nextGroup={findNextGroup(selectedGroup, dietGroups)}
