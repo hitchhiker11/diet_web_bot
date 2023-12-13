@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 // import { Link } from 'react-router-dom';
 // import './MainScreen.css';
 import './App.css';
-function MainScreen({ onOpenMetabolism }) {
+function MainScreen({ onOpenMetabolism, onEditAge, onEditWeight, onEditMetabolism }) {
+
+  
   return (
     <div className="MainScreen">
       <div className="profile-container">
@@ -15,9 +17,9 @@ function MainScreen({ onOpenMetabolism }) {
       </div>
 
       <div className="info-container">
-        <p>Возраст (предпросмотр)</p>
-        <p>Вес (предпросмотр)</p>
-        <p>метаболизм (предпр.)</p>
+        <p>Возраст:  <button onClick={onEditAge}>Ред.</button></p>
+        <p>Вес:  <button onClick={onEditWeight}>Ред.</button></p>
+        <p>Метаболизм:  <button onClick={onEditMetabolism}>Ред.</button></p>
       </div>
 
       <div className="buttons-container">
