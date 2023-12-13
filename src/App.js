@@ -4,11 +4,20 @@ import MetabolismScreen from './MetabolismScreen';
 import ProductSelection from './ProductSelection';
 import DietManagement from './DietManagement';
 import AddProductToDiet from './AddProductToDiet';
+import EditModal from './EditModal';
+
 import './App.css';
 
 function App() {
   const [screen, setScreen] = useState('main');
   const [diet, setDiet] = useState([]); // Добавляем состояние для управления рационом
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingField, setEditingField] = useState(null);
+
+  const openEditModal = (field) => {
+    setIsEditModalOpen(true);
+    setEditingField(field);
+  };
 
   const openMetabolismScreen = () => {
     setScreen('metabolism');
@@ -28,7 +37,11 @@ function App() {
 
   return (
     <div>
-      {screen === 'main' && <MainScreen onOpenMetabolism={openMetabolismScreen} />}
+      {screen === 'main' && <MainScreen           
+          onOpenMetabolism={openMetabolismScreen}
+          onEditAge={() => openEditModal('age')}
+          onEditWeight={() => openEditModal('weight')}
+          onEditMetabolism={() => openEditModal('metabolism')}/>}
       {screen === 'metabolism' && <MetabolismScreen />}
       {screen === 'productSelection' && <ProductSelection />}
       {screen === 'dietManagement' && <DietManagement diet={diet} />}
@@ -42,6 +55,8 @@ function App() {
       {/* <button onClick={openProductSelection}>Выбор Продуктов</button>
       <button onClick={openDietManagement}>Управление Рационом</button>
       <button onClick={() => setScreen('addProduct')}>Добавить Продукт в Рацион</button> */}
+      {isEditModalOpen && <EditModal field={editingField} onClose={() => setIsEditModalOpen(false)} />}
+
     </div>
   );
 }
