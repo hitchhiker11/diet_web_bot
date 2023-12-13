@@ -39,9 +39,9 @@ function App() {
       )}
 
       {/* Кнопки для навигации */}
-      <button onClick={openProductSelection}>Выбор Продуктов</button>
+      {/* <button onClick={openProductSelection}>Выбор Продуктов</button>
       <button onClick={openDietManagement}>Управление Рационом</button>
-      <button onClick={() => setScreen('addProduct')}>Добавить Продукт в Рацион</button>
+      <button onClick={() => setScreen('addProduct')}>Добавить Продукт в Рацион</button> */}
     </div>
   );
 }
